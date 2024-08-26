@@ -3,104 +3,125 @@
 # Mise à jour du système
 sudo pacman -Syu --noconfirm
 
-# Installation des dépendances nécessaires
+# Installation des outils de base pour le système et le développement
 sudo pacman -S --noconfirm \
     git \
-    base-devel \
-    cmake \
-    meson \
-    ninja \
-    wayland \
-    wayland-protocols \
-    wlroots \
-    qt5-wayland \
-    qt6-wayland \
-    cairo \
-    pango \
-    gdk-pixbuf2 \
-    xorg-xwayland \
-    xdg-desktop-portal-wlr \
-    polkit \
-    kitty \
-    dolphin \
-    firefox \
-    keepassxc \
-    nextcloud-client \
-    openvpn \
-    network-manager-applet \
-    bluez \
-    bluez-utils \
-    pulseaudio \
-    pulseaudio-alsa \
-    pulseaudio-bluetooth \
-    pavucontrol \
-    rofi \
-    waybar \
-    dunst \
-    noto-fonts \
-    noto-fonts-emoji \
-    ttf-dejavu \
-    ttf-font-awesome \
-    jq
+    base-devel \  # Outils de développement de base nécessaires pour la compilation
+    cmake \       # Utilisé pour générer les fichiers de build
+    ninja \       # Outil de build performant
+    make \        # Outil de compilation
+    gcc           # Compilateur C/C++
 
-# Clonage et installation de Hyprland depuis le dépôt original qui a fonctionné précédemment
+# Installation des composants Wayland et des bibliothèques nécessaires pour Hyprland
+sudo pacman -S --noconfirm \
+    wayland \                      # Système de fenêtres moderne
+    wayland-protocols \            # Protocoles pour Wayland
+    wlroots \                      # Bibliothèque utilisée par Hyprland
+    qt5-wayland \                  # Support Wayland pour les applications Qt5
+    qt6-wayland \                  # Support Wayland pour les applications Qt6
+    cairo \                        # Bibliothèque graphique
+    pango \                        # Bibliothèque pour le rendu du texte
+    gdk-pixbuf2 \                  # Bibliothèque pour la gestion des images
+    xorg-xwayland \                # Compatibilité X11 pour Wayland
+    xdg-desktop-portal-wlr \       # Intégration des portails avec Wayland
+    polkit \                       # Gestion des permissions système
+    libinput                       # Gestion des périphériques d'entrée (souris, clavier)
+
+# Installation des applications de base pour l'environnement de bureau
+sudo pacman -S --noconfirm \
+    kitty \                        # Terminal léger et performant
+    thunar \                       # Gestionnaire de fichiers léger
+    firefox \                      # Navigateur web robuste
+    mousepad \                     # Éditeur de texte simple et léger
+    feh \                          # Visionneuse d'images légère (aussi pour le fond d'écran)
+    zathura \                      # Visionneuse de PDF légère
+    file-roller                    # Gestionnaire de fichiers compressés
+
+# Installation des outils multimédia
+sudo pacman -S --noconfirm \
+    pipewire \                     # Remplacement moderne de PulseAudio
+    pipewire-alsa \                # Support ALSA pour PipeWire
+    pipewire-pulse \               # Émulation de PulseAudio avec PipeWire
+    pipewire-jack \                # Émulation de Jack avec PipeWire
+    pavucontrol \                  # Contrôle du volume pour PipeWire/PulseAudio
+    mpv                            # Lecteur multimédia léger et polyvalent
+
+# Installation des outils réseau et de sécurité
+sudo pacman -S --noconfirm \
+    networkmanager \               # Gestionnaire de réseau
+    network-manager-applet \       # Applet pour gérer les connexions réseau
+    openvpn \                      # Client VPN
+    networkmanager-openvpn \       # Intégration OpenVPN pour NetworkManager
+    ufw \                          # Pare-feu simple à utiliser
+    gufw                          # Interface graphique pour gérer UFW
+
+# Installation des utilitaires de bureau
+sudo pacman -S --noconfirm \
+    rofi \                         # Menu d'application léger
+    waybar \                       # Barre de statut configurable pour Wayland
+    dunst \                        # Système de notifications léger
+    flameshot \                    # Outil de capture d'écran riche en fonctionnalités
+    font-manager \                 # Gestionnaire graphique de polices
+    htop                           # Gestionnaire de tâches pour surveiller les ressources système
+
+# Installation des outils Bluetooth
+sudo pacman -S --noconfirm \
+    blueman \                      # Gestionnaire Bluetooth avec interface graphique
+    bluez \                        # Bluetooth stack
+    bluez-utils                    # Utilitaires Bluetooth
+
+# Installation des thèmes, icônes et polices pour l'apparence
+sudo pacman -S --noconfirm \
+    arc-gtk-theme \                # Thème GTK moderne
+    papirus-icon-theme \           # Jeu d'icônes complet et esthétique
+    noto-fonts \                   # Polices Noto
+    noto-fonts-emoji \             # Support des emojis
+    ttf-dejavu \                   # Polices DejaVu
+    ttf-font-awesome               # Polices Font Awesome pour les icônes
+
+# Installation des outils de productivité supplémentaires
+sudo pacman -S --noconfirm \
+    rclone \                       # Synchronisation de fichiers avec services cloud
+    nextcloud-client \             # Client pour synchroniser avec Nextcloud
+    keepassxc                      # Gestionnaire de mots de passe
+
+# Clonage du dépôt Hyprland depuis GitHub
 git clone https://github.com/hyprwm/Hyprland.git ~/Hyprland
-cd ~/Hyprland || { echo "Cloning failed or directory does not exist."; exit 1; }
 
-# Vérification de l'existence du PKGBUILD avant de procéder
-if [ ! -f "PKGBUILD" ]; then
-    echo "PKGBUILD does not exist. Exiting."
-    exit 1
-fi
+# Compilation et installation de Hyprland
+cd ~/Hyprland
+make
+sudo make install
 
-# Construction et installation du paquet Hyprland
-makepkg -si --noconfirm --needed --overwrite '*'
+# Création des dossiers de configuration pour Hyprland et les applications
+mkdir -p ~/.config/hypr ~/.config/waybar ~/.config/dunst ~/.config/rofi
 
-# Création des dossiers de configuration
-mkdir -p ~/.config/hypr
-mkdir -p ~/.config/waybar
-mkdir -p ~/.config/dunst
-mkdir -p ~/.config/rofi
-
-# Création du fichier hyprland.conf
+# Création du fichier de configuration de Hyprland
 cat <<EOF > ~/.config/hypr/hyprland.conf
-################
-### MONITORS ###
-################
+# Configuration de base pour Hyprland
 
+# MONITORS: Configuration des écrans
 monitor=,preferred,auto,auto
 
-###################
-### MY PROGRAMS ###
-###################
-
+# PROGRAMMES: Définition des applications par défaut
 \$terminal = kitty
-\$fileManager = dolphin
+\$fileManager = thunar
 \$menu = rofi -show drun
 
-#################
-### AUTOSTART ###
-#################
-
+# AUTOSTART: Applications à lancer au démarrage
 exec-once = nm-applet &
 exec-once = waybar & hyprpaper & firefox
 exec-once = nextcloud &
 exec-once = blueman-applet &
 exec-once = keepassxc &
 
-#############################
-### ENVIRONMENT VARIABLES ###
-#############################
-
+# ENVIRONMENT VARIABLES: Variables d'environnement
 env = XCURSOR_SIZE,24
 env = HYPRCURSOR_SIZE,24
-env = GTK_THEME,Adwaita:dark
+env = GTK_THEME,Arc-Dark
 env = QT_STYLE_OVERRIDE,kvantum
 
-#####################
-### LOOK AND FEEL ###
-#####################
-
+# LOOK AND FEEL: Apparence générale
 general {
     gaps_in = 5
     gaps_out = 20
@@ -112,51 +133,7 @@ general {
     layout = dwindle
 }
 
-decoration {
-    rounding = 10
-    active_opacity = 0.85
-    inactive_opacity = 0.75
-    drop_shadow = true
-    shadow_range = 4
-    shadow_render_power = 3
-    col.shadow = rgba(0, 0, 0, 0.5)
-    blur {
-        enabled = true
-        size = 5
-        passes = 2
-        vibrancy = 0.2
-    }
-}
-
-animations {
-    enabled = true
-    bezier = myBezier, 0.05, 0.9, 0.1, 1.05
-    animation = windows, 1, 7, myBezier
-    animation = windowsOut, 1, 7, default, popin 80%
-    animation = border, 1, 10, default
-    animation = borderangle, 1, 8, default
-    animation = fade, 1, 7, default
-    animation = workspaces, 1, 6, default
-}
-
-dwindle {
-    pseudotile = true
-    preserve_split = true
-}
-
-master {
-    new_status = master
-}
-
-misc { 
-    force_default_wallpaper = -1
-    disable_hyprland_logo = false
-}
-
-#############
-### INPUT ###
-#############
-
+# INPUT: Configuration des périphériques d'entrée
 input {
     kb_layout = us
     follow_mouse = 1
@@ -166,19 +143,7 @@ input {
     }
 }
 
-gestures {
-    workspace_swipe = false
-}
-
-device {
-    name = epic-mouse-v1
-    sensitivity = -0.5
-}
-
-###################
-### KEYBINDINGS ###
-###################
-
+# KEYBINDINGS: Raccourcis clavier
 \$mainMod = SUPER
 bind = \$mainMod, Q, exec, \$terminal
 bind = \$mainMod, E, exec, \$fileManager
@@ -189,7 +154,7 @@ bind = \$mainMod, O, exec, openvpn
 bind = \$mainMod, M, exec, rofi -show drun
 EOF
 
-# Configuration de Waybar avec des icônes, styles et transparence
+# Configuration de Waybar
 cat <<EOF > ~/.config/waybar/config
 {
     "layer": "top",
@@ -227,6 +192,7 @@ cat <<EOF > ~/.config/waybar/config
 }
 EOF
 
+# Configuration des styles de Waybar
 cat <<EOF > ~/.config/waybar/style.css
 * {
     font-family: "DejaVu Sans", "Helvetica", "Arial", sans-serif;
@@ -261,7 +227,7 @@ cat <<EOF > ~/.config/waybar/style.css
 }
 EOF
 
-# Configuration de Dunst pour les notifications avec thème transparent et police DejaVu
+# Configuration de Dunst (notifications)
 cat <<EOF > ~/.config/dunst/dunstrc
 [global]
     font = DejaVu Sans 10
@@ -297,7 +263,7 @@ cat <<EOF > ~/.config/dunst/dunstrc
     frame_color = "#cc0000"
 EOF
 
-# Configuration de Rofi pour un menu avec des icônes, thème transparent, et police DejaVu
+# Configuration de Rofi (menu d'application)
 cat <<EOF > ~/.config/rofi/config.rasi
 configuration {
     modi: "drun,run";
