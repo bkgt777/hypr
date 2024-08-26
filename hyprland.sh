@@ -43,9 +43,19 @@ sudo pacman -S --noconfirm \
     ttf-font-awesome \
     jq
 
-# Installation de Hyprland depuis l'AUR en utilisant un dépôt qui contient un PKGBUILD
-git clone https://aur.archlinux.org/hyprland-git.git ~/hyprland-git
-cd ~/hyprland-git
+# Clonage et installation de Hyprland depuis l'AUR
+# On utilise 'hyprland-git' qui est un paquet AUR contenant un PKGBUILD
+cd /tmp
+git clone https://aur.archlinux.org/hyprland-git.git
+cd hyprland-git || { echo "Cloning failed or directory does not exist."; exit 1; }
+
+# Vérification de l'existence du PKGBUILD avant de procéder
+if [ ! -f "PKGBUILD" ]; then
+    echo "PKGBUILD does not exist. Exiting."
+    exit 1
+fi
+
+# Construction et installation du paquet Hyprland
 makepkg -si --noconfirm --needed --overwrite '*'
 
 # Création des dossiers de configuration
