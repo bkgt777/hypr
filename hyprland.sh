@@ -59,7 +59,12 @@ sudo pacman -S --noconfirm \
     ttf-font-awesome \
     rclone \
     nextcloud-client \
-    keepassxc
+    keepassxc \
+    aquaman-git \
+    aquarius-git \
+    hyprcursor-git \
+    hyprpicker-git \
+    hyprwayland-scanner-git
 
 # Choix de l'installation (AUR ou GitHub)
 echo "Choisissez votre méthode d'installation pour Hyprland:"
