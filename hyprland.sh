@@ -85,13 +85,16 @@ sudo pacman -S --noconfirm \
     nextcloud-client \             # Client pour synchroniser avec Nextcloud
     keepassxc                      # Gestionnaire de mots de passe
 
-# Clonage du dépôt Hyprland depuis GitHub
-git clone https://github.com/hyprwm/Hyprland.git ~/Hyprland
+# Clone the AUR repository for hyprland-git
+git clone https://aur.archlinux.org/hyprland-git.git ~/hyprland-git
 
-# Compilation et installation de Hyprland
-cd ~/Hyprland
-make
-sudo make install
+# Navigate to the repository directory
+cd ~/hyprland-git
+
+# Build and install the package
+makepkg -si
+
+
 
 # Création des dossiers de configuration pour Hyprland et les applications
 mkdir -p ~/.config/hypr ~/.config/waybar ~/.config/dunst ~/.config/rofi
