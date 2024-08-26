@@ -39,25 +39,13 @@ sudo pacman -S --noconfirm \
     dunst \
     noto-fonts \
     noto-fonts-emoji \
-    ttf-roboto \
-    ttf-roboto-mono \
+    ttf-dejavu \
     ttf-font-awesome \
     jq
 
-# Clonage et installation de Hyprland depuis le dépôt GitHub officiel
-if [ -d "~/Hyprland" ]; then
-    rm -rf ~/Hyprland  # Supprimer le répertoire existant pour éviter les conflits
-fi
-
-git clone https://github.com/hyprwm/Hyprland.git ~/Hyprland
-cd ~/Hyprland || { echo "Cloning failed or directory does not exist."; exit 1; }
-
-# Vérifier l'existence du PKGBUILD avant de procéder
-if [ ! -f "PKGBUILD" ]; then
-    echo "PKGBUILD does not exist. Exiting."
-    exit 1
-fi
-
+# Installation de Hyprland depuis l'AUR en utilisant un dépôt qui contient un PKGBUILD
+git clone https://aur.archlinux.org/hyprland-git.git ~/hyprland-git
+cd ~/hyprland-git
 makepkg -si --noconfirm --needed --overwrite '*'
 
 # Création des dossiers de configuration
@@ -118,17 +106,17 @@ general {
 
 decoration {
     rounding = 10
-    active_opacity = 1.0
-    inactive_opacity = 1.0
+    active_opacity = 0.85
+    inactive_opacity = 0.75
     drop_shadow = true
     shadow_range = 4
     shadow_render_power = 3
-    col.shadow = rgba(1a1a1aee)
+    col.shadow = rgba(0, 0, 0, 0.5)
     blur {
         enabled = true
-        size = 3
-        passes = 1
-        vibrancy = 0.1696
+        size = 5
+        passes = 2
+        vibrancy = 0.2
     }
 }
 
@@ -193,7 +181,7 @@ bind = \$mainMod, O, exec, openvpn
 bind = \$mainMod, M, exec, rofi -show drun
 EOF
 
-# Configuration de Waybar avec des icônes et plus de styles
+# Configuration de Waybar avec des icônes, styles et transparence
 cat <<EOF > ~/.config/waybar/config
 {
     "layer": "top",
@@ -233,17 +221,17 @@ EOF
 
 cat <<EOF > ~/.config/waybar/style.css
 * {
-    font-family: "Roboto", "Helvetica", "Arial", sans-serif;
+    font-family: "DejaVu Sans", "Helvetica", "Arial", sans-serif;
     font-size: 12px;
-    background-color: #282c34;
+    background-color: rgba(40, 44, 52, 0.8);
     color: #ffffff;
 }
 
 #waybar {
     height: 30px;
     padding: 0 10px;
-    background-color: #3b4252;
-    border-bottom: 2px solid #444;
+    background-color: rgba(59, 66, 82, 0.8);
+    border-bottom: 2px solid rgba(68, 68, 68, 0.5);
 }
 
 #waybar .module {
@@ -251,7 +239,7 @@ cat <<EOF > ~/.config/waybar/style.css
 }
 
 #waybar .module:hover {
-    background-color: #4c566a;
+    background-color: rgba(76, 86, 106, 0.8);
 }
 
 #waybar .icon {
@@ -265,17 +253,17 @@ cat <<EOF > ~/.config/waybar/style.css
 }
 EOF
 
-# Configuration de Dunst pour les notifications
+# Configuration de Dunst pour les notifications avec thème transparent et police DejaVu
 cat <<EOF > ~/.config/dunst/dunstrc
 [global]
-    font = Monospace 10
+    font = DejaVu Sans 10
     format = "%s\n%b"
     sort = yes
     indicate_hidden = yes
     word_wrap = yes
     ignore_newline = no
     geometry = "300x5-30+30"
-    transparency = 5
+    transparency = 10
     separator_height = 2
     padding = 8
     frame_width = 1
@@ -301,7 +289,7 @@ cat <<EOF > ~/.config/dunst/dunstrc
     frame_color = "#cc0000"
 EOF
 
-# Configuration de Rofi pour un menu avec des icônes
+# Configuration de Rofi pour un menu avec des icônes, thème transparent, et police DejaVu
 cat <<EOF > ~/.config/rofi/config.rasi
 configuration {
     modi: "drun,run";
@@ -309,25 +297,25 @@ configuration {
 }
 
 * {
-    font: "Roboto 12";
+    font: "DejaVu Sans 12";
 }
 
 window {
-    background-color: #2E3440;
+    background-color: rgba(46, 52, 64, 0.8);
     border-radius: 5px;
     padding: 10px;
-    border-color: #4C566A;
+    border-color: rgba(76, 86, 106, 0.5);
 }
 
 listview {
-    background-color: #3B4252;
+    background-color: rgba(59, 66, 82, 0.8);
     padding: 10px;
     fixed-height: 0;
     spacing: 5px;
 }
 
 element {
-    background-color: #434C5E;
+    background-color: rgba(67, 76, 94, 0.8);
     padding: 8px;
     border-radius: 5px;
 }
