@@ -44,10 +44,21 @@ sudo pacman -S --noconfirm \
     ttf-font-awesome \
     jq
 
-# Installation de Hyprland depuis le dépôt GitHub officiel
+# Clonage et installation de Hyprland depuis le dépôt GitHub officiel
+if [ -d "~/Hyprland" ]; then
+    rm -rf ~/Hyprland  # Supprimer le répertoire existant pour éviter les conflits
+fi
+
 git clone https://github.com/hyprwm/Hyprland.git ~/Hyprland
-cd ~/Hyprland
-makepkg -si --noconfirm
+cd ~/Hyprland || { echo "Cloning failed or directory does not exist."; exit 1; }
+
+# Vérifier l'existence du PKGBUILD avant de procéder
+if [ ! -f "PKGBUILD" ]; then
+    echo "PKGBUILD does not exist. Exiting."
+    exit 1
+fi
+
+makepkg -si --noconfirm --needed --overwrite '*'
 
 # Création des dossiers de configuration
 mkdir -p ~/.config/hypr
