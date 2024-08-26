@@ -3,8 +3,19 @@
 # Mise à jour du système
 sudo pacman -Syu --noconfirm
 
-# Installation des dépendances et outils essentiels
-sudo pacman -S --noconfirm \
+# Installation de yay (si non installé)
+if ! command -v yay &> /dev/null; then
+    echo "yay n'est pas installé. Installation de yay..."
+    sudo pacman -S --needed --noconfirm git base-devel
+    git clone https://aur.archlinux.org/yay.git
+    cd yay
+    makepkg -si --noconfirm
+    cd ..
+    rm -rf yay
+fi
+
+# Installation des dépendances et outils essentiels avec yay
+yay -S --noconfirm \
     git \
     base-devel \
     cmake \
@@ -269,10 +280,11 @@ element-icon {
 }
 element-text {
     padding-left: 5px;
-    padding-right: 5px;
+    padding-right: 5px:
     color: #ECEFF4;
 }
 EOF
 
 # Redémarrage de l'environnement graphique pour appliquer les changements
 echo "Installation et configuration terminées. Vous pouvez redémarrer votre session pour appliquer les changements."
+
