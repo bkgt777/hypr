@@ -1,4 +1,4 @@
-OEF#!/bin/bash
+#!/bin/bash
 
 # Mise à jour du système
 sudo pacman -Syu --noconfirm
@@ -465,6 +465,6 @@ bind = $mainMod, mouse_up, workspace, e-1
 # Move/resize windows with mainMod + LMB/RMB and dragging
 bindm = $mainMod, mouse:272, movewindow
 bindm = $mainMod, mouse:273, resizewindow
-EOF
+
 # Redémarrage de l'environnement graphique pour appliquer les changements
 echo "Installation et configuration terminées. Vous pouvez redémarrer votre session pour appliquer les changements."
